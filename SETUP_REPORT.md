@@ -4,9 +4,19 @@
 
 ### 1. Erreurs de syntaxe dans l'API
 - **Fichier**: `app/api/menu-items/route.ts`
-- **Problème**: Utilisation incorrecte de `prisma.menuitems` au lieu de `prisma.menuItem`
-- **Problème**: Import incorrect du client Prisma
-- **Solution**: Correction de la syntaxe et utilisation du singleton Prisma depuis `lib/prisma.ts`
+- **Problème 1**: Utilisation incorrecte de `prisma.menuitems` au lieu de `prisma.menuItem`
+  - Code original: `const menuitems = await prisma.menuitems.findMany();`
+  - Erreur: Le nom du modèle Prisma doit respecter la casse définie dans le schéma
+- **Problème 2**: Import incorrect du client Prisma
+  - Code original: `import { PrismaClient } from "@prisma/client"`
+  - Problème: Création d'une nouvelle instance à chaque requête au lieu d'utiliser le singleton
+- **Problème 3**: Absence de gestion d'erreurs
+  - Code original: Aucun try-catch pour gérer les erreurs de base de données
+- **Solution**: 
+  - Correction de `prisma.menuitems` vers `prisma.menuItem`
+  - Remplacement de l'import par `import { prisma } from "../../../lib/prisma"`
+  - Ajout de try-catch complets avec codes d'erreur HTTP appropriés
+  - Implémentation des méthodes GET et POST manquantes
 
 ### 2. Routes API incomplètes
 - **Fichiers**: `app/api/menu-items/[id]/route.ts`, `app/route.ts`, `app/search/route.ts`
